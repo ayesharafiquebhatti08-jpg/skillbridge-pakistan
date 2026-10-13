@@ -15,6 +15,7 @@ export const mockListings: Listing[] = [
     postedBy: 'Ahsan Raza',
     postedAt: '2 hours ago',
     postedDate: now - 2 * hour,
+    contactPhone: '+92 300 1234567',
   },
   {
     id: 'lst_002',
@@ -26,6 +27,7 @@ export const mockListings: Listing[] = [
     postedBy: 'Fatima Khan',
     postedAt: '5 hours ago',
     postedDate: now - 5 * hour,
+    contactPhone: '+92 321 2345678',
   },
   {
     id: 'lst_003',
@@ -37,6 +39,7 @@ export const mockListings: Listing[] = [
     postedBy: 'Bilal Qureshi',
     postedAt: '8 hours ago',
     postedDate: now - 8 * hour,
+    contactPhone: '+92 333 3456789',
   },
   {
     id: 'lst_004',
@@ -48,6 +51,7 @@ export const mockListings: Listing[] = [
     postedBy: 'Usman Tariq',
     postedAt: '12 hours ago',
     postedDate: now - 12 * hour,
+    contactPhone: '+92 345 4567890',
   },
   {
     id: 'lst_005',
@@ -59,6 +63,7 @@ export const mockListings: Listing[] = [
     postedBy: 'Sana Malik',
     postedAt: '1 day ago',
     postedDate: now - 1 * day,
+    contactPhone: '+92 301 5678901',
   },
   {
     id: 'lst_006',
@@ -70,6 +75,7 @@ export const mockListings: Listing[] = [
     postedBy: 'Imran Sheikh',
     postedAt: '1 day ago',
     postedDate: now - 1 * day - 3 * hour,
+    contactPhone: '+92 322 6789012',
   },
   {
     id: 'lst_007',
@@ -81,6 +87,7 @@ export const mockListings: Listing[] = [
     postedBy: 'Hamza Ali',
     postedAt: '1 day ago',
     postedDate: now - 1 * day - 6 * hour,
+    contactPhone: '+92 300 7890123',
   },
   {
     id: 'lst_008',
@@ -92,6 +99,7 @@ export const mockListings: Listing[] = [
     postedBy: 'Zainab Yusuf',
     postedAt: '2 days ago',
     postedDate: now - 2 * day,
+    contactPhone: '+92 314 8901234',
   },
   {
     id: 'lst_009',
@@ -103,6 +111,7 @@ export const mockListings: Listing[] = [
     postedBy: 'Ayesha Siddiqui',
     postedAt: '2 days ago',
     postedDate: now - 2 * day - 4 * hour,
+    contactPhone: '+92 333 9012345',
   },
   {
     id: 'lst_010',
@@ -114,6 +123,7 @@ export const mockListings: Listing[] = [
     postedBy: 'Adnan Cheema',
     postedAt: '3 days ago',
     postedDate: now - 3 * day,
+    contactPhone: '+92 345 0123456',
   },
   {
     id: 'lst_011',
@@ -125,6 +135,7 @@ export const mockListings: Listing[] = [
     postedBy: 'Nadia Hussain',
     postedAt: '3 days ago',
     postedDate: now - 3 * day - 5 * hour,
+    contactPhone: '+92 301 1234567',
   },
   {
     id: 'lst_012',
@@ -136,5 +147,6 @@ export const mockListings: Listing[] = [
     postedBy: 'Gul Khan',
     postedAt: '4 days ago',
     postedDate: now - 4 * day,
+    contactPhone: '+92 314 2345678',
   },
 ];

@@ -1,19 +1,24 @@
 import { useState, useMemo, useCallback } from 'react';
-import type { Listing, CategoryId, ListingType } from '@/types';
+import type { Listing, CategoryId, ListingType, Message } from '@/types';
 import { mockListings } from '@/data/mockListings';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { Header } from '@/components/Header';
 import { CategoryFilter } from '@/components/CategoryFilter';
 import { ListingCard } from '@/components/ListingCard';
 import { PostModal } from '@/components/PostModal';
-import { ConnectModal } from '@/components/ConnectModal';
+import { MessageDrawer } from '@/components/MessageDrawer';
 import { Search, Frown, Sparkles, TrendingUp } from 'lucide-react';
 
+const STORAGE_KEY_LISTINGS = 'sbpk_listings';
+const STORAGE_KEY_MESSAGES = 'sbpk_messages';
+
 function App() {
-  const [listings, setListings] = useState<Listing[]>(mockListings);
+  const [listings, setListings] = useLocalStorage<Listing[]>(STORAGE_KEY_LISTINGS, mockListings);
+  const [messages, setMessages] = useLocalStorage<Message[]>(STORAGE_KEY_MESSAGES, []);
   const [activeFilter, setActiveFilter] = useState<CategoryId | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [postModalOpen, setPostModalOpen] = useState(false);
-  const [connectListing, setConnectListing] = useState<Listing | null>(null);
+  const [drawerListing, setDrawerListing] = useState<Listing | null>(null);
 
   const counts = useMemo(() => {
     const all: Record<string, number> = { all: listings.length };
@@ -37,32 +42,73 @@ function App() {
     });
   }, [listings, activeFilter, searchQuery]);
 
-  const handlePost = useCallback((data: {
-    title: string;
-    category: CategoryId;
-    location: string;
-    description: string;
-    type: ListingType;
-    postedBy: string;
-  }) => {
-    const newListing: Listing = {
-      id: `lst_${Date.now()}`,
-      title: data.title,
-      category: data.category,
-      location: data.location,
-      description: data.description,
-      type: data.type,
-      postedBy: data.postedBy,
-      postedAt: 'Just now',
-      postedDate: Date.now(),
-    };
-    setListings((prev) => [newListing, ...prev]);
-    setPostModalOpen(false);
-  }, []);
+  const handlePost = useCallback(
+    (data: {
+      title: string;
+      category: CategoryId;
+      location: string;
+      description: string;
+      type: ListingType;
+      postedBy: string;
+      contactPhone: string;
+    }) => {
+      const newListing: Listing = {
+        id: `lst_${Date.now()}`,
+        title: data.title,
+        category: data.category,
+        location: data.location,
+        description: data.description,
+        type: data.type,
+        postedBy: data.postedBy,
+        postedAt: 'Just now',
+        postedDate: Date.now(),
+        contactPhone: data.contactPhone,
+      };
+      setListings((prev) => [newListing, ...prev]);
+      setPostModalOpen(false);
+    },
+    [setListings]
+  );
 
   const handleConnect = useCallback((listing: Listing) => {
-    setConnectListing(listing);
+    setDrawerListing(listing);
   }, []);
+
+  const handleSendMessage = useCallback(
+    (text: string) => {
+      if (!drawerListing) return;
+      const msg: Message = {
+        id: `msg_${Date.now()}`,
+        listingId: drawerListing.id,
+        senderName: 'You',
+        text,
+        sentAt: Date.now(),
+        isMe: true,
+      };
+      setMessages((prev) => [...prev, msg]);
+
+      // Simulate a reply after a short delay
+      setTimeout(() => {
+        const replies = [
+          'Thanks for reaching out! I\'d be happy to help. When works best for you?',
+          'Great to hear from you. Can you share a bit more about what you\'re looking for?',
+          'Hi! Yes, this is still available. Let\'s connect and discuss further.',
+          'Thanks for your interest! Feel free to call me at the number shown above.',
+          'Hello! I appreciate you reaching out. What\'s your availability like this week?',
+        ];
+        const reply: Message = {
+          id: `msg_${Date.now()}_r`,
+          listingId: drawerListing.id,
+          senderName: drawerListing.postedBy,
+          text: replies[Math.floor(Math.random() * replies.length)],
+          sentAt: Date.now(),
+          isMe: false,
+        };
+        setMessages((prev) => [...prev, reply]);
+      }, 1200 + Math.random() * 800);
+    },
+    [drawerListing, setMessages]
+  );
 
   return (
     <div className="min-h-screen bg-ink-950 bg-grid-pattern">
@@ -174,13 +220,18 @@ function App() {
         </div>
       </footer>
 
-      {/* Modals */}
+      {/* Modals & Drawer */}
       <PostModal
         open={postModalOpen}
         onClose={() => setPostModalOpen(false)}
         onSubmit={handlePost}
       />
-      <ConnectModal listing={connectListing} onClose={() => setConnectListing(null)} />
+      <MessageDrawer
+        listing={drawerListing}
+        messages={messages}
+        onClose={() => setDrawerListing(null)}
+        onSend={handleSendMessage}
+      />
     </div>
   );
 }

@@ -12,6 +12,16 @@ export interface Listing {
   postedBy: string;
   postedAt: string;
   postedDate: number;
+  contactPhone: string;
+}
+
+export interface Message {
+  id: string;
+  listingId: string;
+  senderName: string;
+  text: string;
+  sentAt: number;
+  isMe: boolean;
 }
 
 export interface Category {

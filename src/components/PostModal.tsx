@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import type { Listing, CategoryId, ListingType } from '@/types';
+import type { CategoryId, ListingType } from '@/types';
 import { categories } from '@/types';
-import { X, Send, Sparkles, MapPin } from 'lucide-react';
+import { X, Send, Sparkles, MapPin, Phone } from 'lucide-react';
 
 interface PostModalProps {
   open: boolean;
@@ -13,6 +13,7 @@ interface PostModalProps {
     description: string;
     type: ListingType;
     postedBy: string;
+    contactPhone: string;
   }) => void;
 }
 
@@ -29,6 +30,7 @@ export function PostModal({ open, onClose, onSubmit }: PostModalProps) {
   const [description, setDescription] = useState('');
   const [type, setType] = useState<ListingType>('offering');
   const [postedBy, setPostedBy] = useState('');
+  const [contactPhone, setContactPhone] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
@@ -39,6 +41,7 @@ export function PostModal({ open, onClose, onSubmit }: PostModalProps) {
       setDescription('');
       setType('offering');
       setPostedBy('');
+      setContactPhone('');
       setErrors({});
     }
   }, [open]);
@@ -67,6 +70,8 @@ export function PostModal({ open, onClose, onSubmit }: PostModalProps) {
     if (!description.trim()) newErrors.description = 'Please add a description';
     else if (description.trim().length < 15) newErrors.description = 'Description must be at least 15 characters';
     if (!postedBy.trim()) newErrors.postedBy = 'Please enter your name';
+    if (!contactPhone.trim()) newErrors.contactPhone = 'Please enter a contact number';
+    else if (contactPhone.trim().length < 7) newErrors.contactPhone = 'Please enter a valid phone number';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -81,6 +86,7 @@ export function PostModal({ open, onClose, onSubmit }: PostModalProps) {
       description: description.trim(),
       type,
       postedBy: postedBy.trim(),
+      contactPhone: contactPhone.trim(),
     });
   };
 
@@ -100,10 +106,8 @@ export function PostModal({ open, onClose, onSubmit }: PostModalProps) {
       className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
       onClick={onClose}
     >
-      {/* Backdrop */}
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
 
-      {/* Modal */}
       <div
         className="relative z-10 flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-2xl border border-ink-700 bg-ink-900 shadow-2xl animate-scale-in"
         onClick={(e) => e.stopPropagation()}
@@ -208,17 +212,30 @@ export function PostModal({ open, onClose, onSubmit }: PostModalProps) {
             </div>
           </div>
 
-          {/* Your name */}
-          <div className="mb-4">
-            {fieldLabel('Your Name')}
-            <input
-              type="text"
-              value={postedBy}
-              onChange={(e) => setPostedBy(e.target.value)}
-              placeholder="e.g. Ali Ahmed"
-              className={inputClass('postedBy')}
-            />
-            {errors.postedBy && <p className="mt-1.5 text-xs text-crimson-400">{errors.postedBy}</p>}
+          {/* Your name + phone row */}
+          <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div>
+              {fieldLabel('Your Name')}
+              <input
+                type="text"
+                value={postedBy}
+                onChange={(e) => setPostedBy(e.target.value)}
+                placeholder="e.g. Ali Ahmed"
+                className={inputClass('postedBy')}
+              />
+              {errors.postedBy && <p className="mt-1.5 text-xs text-crimson-400">{errors.postedBy}</p>}
+            </div>
+            <div>
+              {fieldLabel('Contact Number')}
+              <input
+                type="tel"
+                value={contactPhone}
+                onChange={(e) => setContactPhone(e.target.value)}
+                placeholder="e.g. +92 300 1234567"
+                className={inputClass('contactPhone')}
+              />
+              {errors.contactPhone && <p className="mt-1.5 text-xs text-crimson-400">{errors.contactPhone}</p>}
+            </div>
           </div>
 
           {/* Description */}
